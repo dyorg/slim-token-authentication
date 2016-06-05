@@ -1,5 +1,15 @@
 <?php
-namespace app\middlewares\TokenAuthentication;
+
+/*
+ * This file is part of Slim Token Authentication Middleware
+ *
+ * Copyright (c) 2016 Dyorg Almeida
+ *
+ * Licensed under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+namespace Slim\Middleware\TokenAuthentication;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 

@@ -1,6 +1,17 @@
 <?php
-namespace app\middlewares\TokenAuthentication;
 
-class TokenAuthenticationException extends \Exception {
+/*
+ * This file is part of Slim Token Authentication Middleware
+ *
+ * Copyright (c) 2016 Dyorg Almeida
+ *
+ * Licensed under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+namespace Slim\Middleware\TokenAuthentication;
+
+class TokenAuthenticationException extends \Exception
+{
 
 }

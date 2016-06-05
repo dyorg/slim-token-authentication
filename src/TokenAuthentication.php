@@ -1,7 +1,18 @@
 <?php
-namespace app\middlewares;
-use app\middlewares\TokenAuthentication\TokenAuthenticationException;
-use app\middlewares\TokenAuthentication\TokenSearch;
+
+/*
+ * This file is part of Slim Token Authentication Middleware
+ *
+ * Copyright (c) 2016 Dyorg Almeida
+ *
+ * Licensed under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+namespace Slim\Middleware;
+
+use Slim\Middleware\TokenAuthentication\TokenAuthenticationException;
+use Slim\Middleware\TokenAuthentication\TokenSearch;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

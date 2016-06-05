@@ -28,19 +28,36 @@
       <file leaf-file-name="TokenSearch.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TokenAuthentication/TokenSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="1140">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="-8.965517" vertical-offset="0" max-vertical-offset="1340">
+              <caret line="13" column="55" selection-start-line="13" selection-start-column="55" selection-end-line="13" selection-end-column="55" />
+              <folding>
+                <element signature="e#7#204#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="composer.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/composer.json">
+      <file leaf-file-name="TokenAuthenticationException.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/TokenAuthentication/TokenAuthenticationException.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18518518" vertical-offset="0" max-vertical-offset="864">
-              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-              <folding />
+            <state vertical-scroll-proportion="-3.7037036" vertical-offset="0" max-vertical-offset="440">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding>
+                <element signature="e#7#204#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TokenAuthentication.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/TokenAuthentication.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.0167065" vertical-offset="5362" max-vertical-offset="6200">
+              <caret line="16" column="55" selection-start-line="16" selection-start-column="55" selection-end-line="16" selection-end-column="55" />
+              <folding>
+                <element signature="e#7#204#0#PHP" expanded="true" />
+                <element signature="e#234#303#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,6 +68,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/src/TokenAuthentication/TokenSearch.php" />
+        <option value="$PROJECT_DIR$/src/TokenAuthentication/TokenAuthenticationException.php" />
+        <option value="$PROJECT_DIR$/src/TokenAuthentication.php" />
       </list>
     </option>
   </component>
@@ -232,19 +252,42 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/TokenAuthentication/TokenSearch.php">
+    <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1140">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.18539977" vertical-offset="0" max-vertical-offset="863">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/composer.json">
+    <entry file="file://$PROJECT_DIR$/src/TokenAuthentication/TokenAuthenticationException.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18518518" vertical-offset="0" max-vertical-offset="864">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-          <folding />
+        <state vertical-scroll-proportion="-3.7037036" vertical-offset="0" max-vertical-offset="440">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#7#204#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TokenAuthentication/TokenSearch.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.965517" vertical-offset="0" max-vertical-offset="1340">
+          <caret line="13" column="55" selection-start-line="13" selection-start-column="55" selection-end-line="13" selection-end-column="55" />
+          <folding>
+            <element signature="e#7#204#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TokenAuthentication.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.0167065" vertical-offset="5362" max-vertical-offset="6200">
+          <caret line="16" column="55" selection-start-line="16" selection-start-column="55" selection-end-line="16" selection-end-column="55" />
+          <folding>
+            <element signature="e#7#204#0#PHP" expanded="true" />
+            <element signature="e#234#303#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
