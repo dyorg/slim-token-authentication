@@ -1,11 +1,13 @@
 {
   "name": "dyorg/slim-token-authentication",
-  "description": "PSR-7 Token Authentication Middleware",
+  "description": "Slim 3.0+ Token Authentication Middleware",
   "keywords": [
-    "psr-7",
+    "slim",
     "middleware",
     "token",
-    "auth"
+    "auth",
+    "authentication",
+    "authorization"
   ],
   "homepage": "https://github.com/dyorg/slim-token-authentication",
   "license": "MIT",
