@@ -11,7 +11,7 @@
 
 namespace Slim\Middleware\TokenAuthentication;
 
-class TokenAuthenticationException extends \Exception
+interface UnauthorizedExceptionInterface
 {
 
 }

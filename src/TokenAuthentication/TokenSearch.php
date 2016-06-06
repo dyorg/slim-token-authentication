@@ -57,6 +57,6 @@ class TokenSearch
             }
         }
 
-        throw new TokenAuthenticationException('Token not found');
+        throw new TokenNotFoundException('Token not found');
     }
 }

@@ -11,8 +11,8 @@
 
 namespace Slim\Middleware;
 
-use Slim\Middleware\TokenAuthentication\TokenAuthenticationException;
 use Slim\Middleware\TokenAuthentication\TokenSearch;
+use Slim\Middleware\TokenAuthentication\UnauthorizedExceptionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -58,8 +58,8 @@ class TokenAuthentication
         }
 
         /* Call custom authenticator function */
-        if (empty($this->options['authenticator']) || !is_callable($this->options['authenticator']))
-            throw new \ErrorException('authenticator option has not been set or it is not callable.');
+        if (empty($this->options['authenticator']))
+            throw new \RuntimeException('authenticator option has not been set or it is not callable.');
 
         try {
 
@@ -69,7 +69,7 @@ class TokenAuthentication
 
             return $next($request, $response);
 
-        } catch (TokenAuthenticationException $e) {
+        } catch (UnauthorizedExceptionInterface $e) {
             $this->setResponseMessage($e->getMessage());
             return $this->error($request, $response);
         }
@@ -112,7 +112,7 @@ class TokenAuthentication
     public function error(Request $request, Response $response)
     {
         /* If exists a custom error function callable, ignore remaining code */
-        if (empty($this->options['error']) && is_callable($this->options['error'])) {
+        if (!empty($this->options['error'])) {
             $this->options['error']($request, $response, $this);
             return $response;
         }
