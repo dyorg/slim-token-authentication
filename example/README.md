@@ -1,21 +1,20 @@
 # Slim Token Authentication Example
 
-## Installing dependencies
+### Installing dependencies
 
 ```bash
 composer update
 ```
 
-## Making authentication
-
-### Authentication via header
+### Making authentication via header
 
 On your prompt
 
 ```bash
 $ curl -i http://localhost/slim-token-authentication/example/restrict -H "Authorization: Bearer usertokensecret"
+```
 
-### Authentication via query paramater
+### Making authentication via query paramater
 
 On your prompt
 
@@ -29,7 +28,7 @@ Instead you can try authentication with parameter via your browser
 http://localhost/slim-token-authentication/example/restrict?authorization=usertokensecret
 ```
 
-## Responses
+### Responses
 
 On success should return something like:
 
