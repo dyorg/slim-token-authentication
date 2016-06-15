@@ -1,0 +1,18 @@
+# Slim Token Authentication Example
+
+## Run app example
+
+```bash
+composer update
+```
+
+## Authentication via header
+
+On your prompt run:
+
+
+## Authentication via paramater
+
+## Authentication via cookie
+
+
