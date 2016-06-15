@@ -4,7 +4,6 @@ require_once 'vendor/autoload.php';
 
 use Slim\App;
 use Slim\Middleware\TokenAuthentication;
-use app\Auth;
 
 $config = [
     'settings' => [
@@ -25,7 +24,7 @@ $authenticator = function($request, TokenAuthentication $tokenAuth){
     /*
      * Call authentication logic class
      */
-    $auth = new Auth();
+    $auth = new \app\Auth();
 
     /*
      * Verify if token is valid on database
@@ -47,8 +46,8 @@ $app->add(new TokenAuthentication([
  * Public route
  */
 $app->get('/', function($request, $response){
-    $output = ['msg' => 'This is a public route'];
-    $response->withJson($output, 200, JSON_PRETTY_PRINT);
+    $output = ['msg' => 'It is a public area'];
+    $response->withJson($output);
 });
 
 /*
@@ -56,8 +55,8 @@ $app->get('/', function($request, $response){
  * Our token is "usertokensecret"
  */
 $app->get('/restrict', function($request, $response){
-    $output = ['msg' => 'Token authentication works!'];
-    $response->withJson($output, 200, JSON_PRETTY_PRINT);
+    $output = ['msg' => 'It\'s a restrict area. Token authentication works!'];
+    $response->withJson($output);
 });
 
 $app->run();
