@@ -80,67 +80,6 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Error
-
-By default on ocurred a fail on authentication, is sent a response on json format with a message (`Invalid Token` or `Not found Token`) and with the token (if found), with status `401 Unauthorized`.
-You can custom it by setting a callable function on `error` option.
-
-```php
-...
-
-$error = function($request, $response, TokenAuthentication $tokenAuth) {
-    $output = [];
-    $output['error'] = [
-        'msg' => $tokenAuth->getResponseMessage(),
-        'token' => $tokenAuth->getResponseToken(),
-        'status' => 401,
-        'error' => true
-    ];
-    return $response->withJson($output, 401);
-}
-
-$app = new App();
-
-$app->add(new TokenAuthentication([
-    'path' => '/api',
-    'authenticator' => $authenticator
-    'error' => $error
-]));
-```
-
-This error function is called when `TokenAuthentication` catch an throwable class that implements `UnauthorizedExceptionInterface`.
-
-### Secure
-
-Tokens are essentially passwords. You should treat them as such and you should always use HTTPS. 
-If the middleware detects insecure usage over HTTP it will return unathorized with a message `Required HTTPS for token authentication`. 
-This rule is relaxed for requests on localhost. To allow insecure usage you must enable it manually by setting `secure` to false.
-
-```php
-...
-
-$app = new App();
-
-$app->add(new TokenAuthentication([
-    'path' => '/api',
-    'authenticator' => $authenticator,
-    'secure' => false
-]));
-```
-
-Alternatively you can list your development host to have `relaxed` security.
-
-```php
-...
-
-$app->add(new TokenAuthentication([
-    'path' => '/api',
-    'authenticator' => $authenticator,
-    'secure' => true,
-    'relaxed' => ['localhost', 'your-app.dev']
-]));
-```
-
 ### Header
 
 By default middleware tries to find token from `Authorization` header. You can change header name using `header` option.
@@ -207,6 +146,67 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Example
+### Error
+
+By default on ocurred a fail on authentication, is sent a response on json format with a message (`Invalid Token` or `Not found Token`) and with the token (if found), with status `401 Unauthorized`.
+You can custom it by setting a callable function on `error` option.
+
+```php
+...
+
+$error = function($request, $response, TokenAuthentication $tokenAuth) {
+    $output = [];
+    $output['error'] = [
+        'msg' => $tokenAuth->getResponseMessage(),
+        'token' => $tokenAuth->getResponseToken(),
+        'status' => 401,
+        'error' => true
+    ];
+    return $response->withJson($output, 401);
+}
+
+$app = new App();
+
+$app->add(new TokenAuthentication([
+    'path' => '/api',
+    'authenticator' => $authenticator
+    'error' => $error
+]));
+```
+
+This error function is called when `TokenAuthentication` catch an throwable class that implements `UnauthorizedExceptionInterface`.
+
+### Secure
+
+Tokens are essentially passwords. You should treat them as such and you should always use HTTPS. 
+If the middleware detects insecure usage over HTTP it will return unathorized with a message `Required HTTPS for token authentication`. 
+This rule is relaxed for requests on localhost. To allow insecure usage you must enable it manually by setting `secure` to false.
+
+```php
+...
+
+$app = new App();
+
+$app->add(new TokenAuthentication([
+    'path' => '/api',
+    'authenticator' => $authenticator,
+    'secure' => false
+]));
+```
+
+Alternatively you can list your development host to have `relaxed` security.
+
+```php
+...
+
+$app->add(new TokenAuthentication([
+    'path' => '/api',
+    'authenticator' => $authenticator,
+    'secure' => true,
+    'relaxed' => ['localhost', 'your-app.dev']
+]));
+```
+
+## Example
 
 See how use it on [/example](https://github.com/dyorg/slim-token-authentication/tree/master/example)
