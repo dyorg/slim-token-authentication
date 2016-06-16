@@ -3,13 +3,13 @@
 This is a simple example of how implements token authentication with Slim application.
 See complete documentation on [Slim Token Authentication](https://github.com/dyorg/slim-token-authentication).
 
-### Installing dependencies
+## Installing dependencies
 
 ```bash
 composer update
 ```
 
-### Making authentication via header
+## Making authentication via header
 
 On your prompt:
 
@@ -17,7 +17,7 @@ On your prompt:
 $ curl -i http://localhost/slim-token-authentication/example/restrict -H "Authorization: Bearer usertokensecret"
 ```
 
-### Making authentication via query paramater
+## Making authentication via query paramater
 
 On your prompt:
 
@@ -31,7 +31,7 @@ Instead you can try authentication with parameter via your browser:
 http://localhost/slim-token-authentication/example/restrict?authorization=usertokensecret
 ```
 
-### Responses
+## Responses
 
 On success should return something like:
 
