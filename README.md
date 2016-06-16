@@ -1,7 +1,7 @@
 # Slim Token Authentication
 
-It's a Token Authentication Middleware for Slim 3.0+. 
-This middleware was created to keep easy to implement custom authentication logic.  
+This is a Token Authentication Middleware for Slim 3.0+. 
+This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
 ## Installing
 
@@ -108,7 +108,7 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-This error function is called when `TokenAuthentication` catch an throwable class that implements `UnauthorizatedExceptionInterface`.
+This error function is called when `TokenAuthentication` catch an throwable class that implements `UnauthorizedExceptionInterface`.
 
 ### Secure
 
@@ -145,8 +145,8 @@ $app->add(new TokenAuthentication([
 
 By default middleware tries to find token from `Authorization` header. You can change header name using `header` option.
 Is expected in Authorization header the value format as `Bearer <token>`, it is matched using a regular expression. 
-If you wants works without token type or with other token type, like `Basic <token>`, 
-you can change the regular expression pattern setting it in `regex` option.
+If you want to work without token type or with other token type, like `Basic <token>`, 
+you can change the regular expression pattern setting it on `regex` option.
 You can disabled authentication via header setting `header` option as null.
 
 ```php
