@@ -75,7 +75,7 @@ $app = new App();
 
 $app->add(new TokenAuthentication([
     'path' => '/api',
-    'passthrough' => '/api/auth',
+    'passthrough' => '/api/auth', /* or ['/api/auth', '/api/test'] */
     'authenticator' => $authenticator
 ]));
 ```
