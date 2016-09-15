@@ -29,7 +29,7 @@ class TokenAuthentication
         'regex' => '/Bearer\s+(.*)$/i',
         'parameter' => 'authorization',
         'cookie' => 'authorization',
-        'attribute' => null
+        'argument' => 'authorization'
     ];
 
     private $response = [];
@@ -136,7 +136,7 @@ class TokenAuthentication
             'regex' => $this->options['regex'],
             'parameter' => $this->options['parameter'],
             'cookie' => $this->options['cookie'],
-            'attribute' => $this->options['attribute']
+            'argument' => $this->options['argument']
         ]);
 
         $token = $tokenSearch($request);
