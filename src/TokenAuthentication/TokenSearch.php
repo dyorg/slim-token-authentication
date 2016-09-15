@@ -24,7 +24,7 @@ class TokenSearch
 
     public function __invoke(Request $request)
     {
-        /* Check for token on header */
+        /** Check for token on header */
         if (isset($this->options['header'])) {
             if ($request->hasHeader($this->options['header'])) {
                 $header = $request->getHeader($this->options['header'])[0];
@@ -34,13 +34,13 @@ class TokenSearch
             }
         }
 
-        /* If nothing on header, try query parameters */
+        /** If nothing on header, try query parameters */
         if (isset($this->options['parameter'])) {
             if (!empty($request->getQueryParams()[$this->options['parameter']]))
                 return $request->getQueryParams()[$this->options['parameter']];
         }
 
-        /* If nothing on parameters, try cookies */
+        /** If nothing on parameters, try cookies */
         if (isset($this->options['cookie'])) {
             $cookie_params = $request->getCookieParams();
             if (!empty($cookie_params[$this->options["cookie"]])) {
@@ -48,12 +48,13 @@ class TokenSearch
             };
         }
 
-        /* If nothing until now, check argument as last try */
+        /** If nothing until now, check argument as last try */
         if (isset($this->options['argument'])) {
-            $route = $request->getAttribute('route');
-            $argument = $route->getArgument($this->options['argument']);
-            if (!empty($argument)) {
-                return $argument;
+            if ($route = $request->getAttribute('route')) {
+                $argument = $route->getArgument($this->options['argument']);
+                if (!empty($argument)) {
+                    return $argument;
+                }
             }
         }
 

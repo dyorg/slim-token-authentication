@@ -36,7 +36,7 @@ class TokenAuthentication
 
     public function __construct(array $options = [])
     {
-        /* Rewrite options */
+        /** Rewrite options */
         $this->fill($options);
     }
 
@@ -45,19 +45,19 @@ class TokenAuthentication
         $scheme = $request->getUri()->getScheme();
         $host = $request->getUri()->getHost();
 
-        /* If rules say we should not authenticate call next and return. */
+        /** If rules say we should not authenticate call next and return. */
         if (false === $this->shouldAuthenticate($request)) {
             return $next($request, $response);
         }
 
-        /* HTTP allowed only if secure is false or server is in relaxed array. */
+        /** HTTP allowed only if secure is false or server is in relaxed array. */
         if ("https" !== $scheme && true === $this->options["secure"]) {
             if (!in_array($host, $this->options["relaxed"])) {
                 return $response->withJson(['message' => 'Required HTTPS for token authentication.'], 401);
             }
         }
 
-        /* Call custom authenticator function */
+        /** Call custom authenticator function */
         if (empty($this->options['authenticator']))
             throw new \RuntimeException('authenticator option has not been set or it is not callable.');
 
@@ -90,7 +90,7 @@ class TokenAuthentication
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
 
-        /* If request path is matches passthrough should not authenticate. */
+        /** If request path is matches passthrough should not authenticate. */
         foreach ((array)$this->options["passthrough"] as $passthrough) {
             $passthrough = rtrim($passthrough, "/");
             if (preg_match("@^{$passthrough}(/.*)?$@", $uri)) {
@@ -98,7 +98,7 @@ class TokenAuthentication
             }
         }
 
-        /* Otherwise check if path matches and we should authenticate. */
+        /** Otherwise check if path matches and we should authenticate. */
         foreach ((array)$this->options["path"] as $path) {
             $path = rtrim($path, "/");
             if (preg_match("@^{$path}(/.*)?$@", $uri)) {
@@ -111,7 +111,7 @@ class TokenAuthentication
 
     public function error(Request $request, Response $response)
     {
-        /* If exists a custom error function callable, ignore remaining code */
+        /** If exists a custom error function callable, ignore remaining code */
         if (!empty($this->options['error'])) {
             $this->options['error']($request, $response, $this);
             return $response;
@@ -126,7 +126,7 @@ class TokenAuthentication
             $res['token'] = $this->getResponseToken();
         }
 
-        return $response->withJson($res, 401);
+        return $response->withJson($res, 401, JSON_PRETTY_PRINT);
     }
 
     public function findToken(Request $request)
@@ -168,7 +168,7 @@ class TokenAuthentication
         return isset($this->response['token']) ? $this->response['token'] : null;
     }
 
-    /* Use to set multiples messages and after get on custom error function */
+    /** Use to set multiples messages and after get on custom error function */
     public function setResponseArray(array $args = [])
     {
         foreach ($args as $name => $text) {
