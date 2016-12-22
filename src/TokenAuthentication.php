@@ -113,8 +113,7 @@ class TokenAuthentication
     {
         /** If exists a custom error function callable, ignore remaining code */
         if (!empty($this->options['error'])) {
-            $this->options['error']($request, $response, $this);
-            return $response;
+            return $this->options['error']($request, $response, $this);
         }
 
         if ($this->getResponseMessage())
