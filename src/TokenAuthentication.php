@@ -34,10 +34,13 @@ class TokenAuthentication
 
     private $response = [];
 
-    public function __construct(array $options = [])
+    private $container;
+
+    public function __construct(array $options = [], $container)
     {
         /** Rewrite options */
         $this->fill($options);
+        $this->container = $container;
     }
 
     public function __invoke(Request $request, Response $response, $next)
@@ -113,8 +116,7 @@ class TokenAuthentication
     {
         /** If exists a custom error function callable, ignore remaining code */
         if (!empty($this->options['error'])) {
-            $this->options['error']($request, $response, $this);
-            return $response;
+            return $this->options['error']($request, $response, $this);
         }
 
         if ($this->getResponseMessage())
@@ -301,5 +303,10 @@ class TokenAuthentication
     public function getCookie()
     {
         return $this->options['cookie'];
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 }
