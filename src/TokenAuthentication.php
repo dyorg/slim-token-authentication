@@ -113,8 +113,14 @@ class TokenAuthentication
     {
         /** If exists a custom error function callable, ignore remaining code */
         if (!empty($this->options['error'])) {
-            $this->options['error']($request, $response, $this);
-            return $response;
+            
+            $custom_error_response = $this->options['error']($request, $response, $this);
+
+            if ($custom_error_response instanceof Response) {
+               return $custom_error_response;
+            } else {
+                throw new \Exception("The error function must return an object of class Response.");
+            }
         }
 
         if ($this->getResponseMessage())
