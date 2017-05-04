@@ -101,7 +101,7 @@ $app->add(new TokenAuthentication([
 
 ### Parameter
 
-If token is not fount on header, middleware tries to find `authorization` query parameter. 
+If token was not found on header, middleware tries to find `authorization` query parameter. 
 You can change parameter name using `parameter` option. 
 You can disabled authentication via parameter setting `parameter` option as null.
 
@@ -117,7 +117,7 @@ $app->add(new TokenAuthentication([
 
 ### Cookie
 
-As a last resort, middleware tries to find `authorization` cookie. 
+If token was not found yet, middleware tries to find `authorization` cookie. 
 You can change cookie name using `cookie` option. 
 You can disabled authentication via cookie setting `cookie` option as null.
 
@@ -131,10 +131,11 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Attribute
+### Argument
 
-By default, middleware not tries to find token `authorization` attribute of route.
-To enable authentication via attribute you must setting a name for attribute on `attribute` option.
+As a last resort, middleware tries to find `authorization` argument of route.
+You can change argument name using `argument` option. 
+You can disabled authentication via argument setting `argument` option as null.
 
 ```php
 ...
@@ -142,7 +143,7 @@ To enable authentication via attribute you must setting a name for attribute on 
 $app->add(new TokenAuthentication([
     'path' => '/api',
     'authenticator' => $authenticator,
-    'attribute' => 'authorization'
+    'argument' => 'token'
 ]));
 ```
 
@@ -209,7 +210,7 @@ $app->add(new TokenAuthentication([
 
 ## Example
 
-See how use it on [/example](https://github.com/dyorg/slim-token-authentication/tree/master/example).
+See how use it on [/example](example).
 
 ## License
 
