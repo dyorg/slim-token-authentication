@@ -209,4 +209,12 @@ $app->add(new TokenAuthentication([
 
 ## Example
 
-See how use it on [/example](https://github.com/dyorg/slim-token-authentication/tree/master/example)
+See how use it on [/example](https://github.com/dyorg/slim-token-authentication/tree/master/example).
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Credits
+
+This middleware was created based on [PSR-7 JWT Authentication Middleware](https://github.com/tuupola/slim-jwt-auth).
