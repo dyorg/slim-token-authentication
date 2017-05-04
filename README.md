@@ -213,8 +213,4 @@ See how use it on [/example](https://github.com/dyorg/slim-token-authentication/
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Credits
-
-This middleware was created based on [PSR-7 JWT Authentication Middleware](https://github.com/tuupola/slim-jwt-auth).
+The MIT License (MIT). Please see [License](LICENSE) for more information.
