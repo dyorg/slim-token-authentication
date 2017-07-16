@@ -5,7 +5,7 @@ This middleware was designed to maintain easy to implement token authentication 
 
 ## Installing
 
-Get last version with [Composer](http://getcomposer.org "Composer").
+Get the latest version with [Composer](http://getcomposer.org "Composer").
 
 ```bash
 composer require dyorg/slim-token-authentication
@@ -13,9 +13,9 @@ composer require dyorg/slim-token-authentication
 
 ## Getting authentication
 
-Start creating a `authenticator` function, this function will make the token validation of your application.
-When you create a new instance of `TokenAuthentication` you must pass a array with configuration options. 
-You need setting authenticator and path options to authentication start work.
+Start by creating an `authenticator` function, this function will make the token validation of your application.
+When you create a new instance of `TokenAuthentication` you must pass an array with configuration options. 
+You need setting authenticator and path options for authentication to start working.
 
 ```php
 $authenticator = function($request, TokenAuthentication $tokenAuth){
@@ -50,8 +50,8 @@ You can configure it through options settings.
 
 ### Path
 
-By default none route require authentication. 
-You must set one or more routes to be restrict by authentication, setting it on `path` option.
+By default no route requires authentication. 
+You must set one or more routes to be restricted by authentication, setting it on `path` option.
  
 ```php
 ...
@@ -86,7 +86,7 @@ By default middleware tries to find token from `Authorization` header. You can c
 Is expected in Authorization header the value format as `Bearer <token>`, it is matched using a regular expression. 
 If you want to work without token type or with other token type, like `Basic <token>`, 
 you can change the regular expression pattern setting it on `regex` option.
-You can disabled authentication via header setting `header` option as null.
+You can disabled authentication via header by setting `header` option as null.
 
 ```php
 ...
@@ -101,9 +101,9 @@ $app->add(new TokenAuthentication([
 
 ### Parameter
 
-If token was not found on header, middleware tries to find `authorization` query parameter. 
+If token is not found in header, middleware tries to find `authorization` query parameter. 
 You can change parameter name using `parameter` option. 
-You can disabled authentication via parameter setting `parameter` option as null.
+You can disable authentication via parameter by setting `parameter` option as null.
 
 ```php
 ...
@@ -117,9 +117,9 @@ $app->add(new TokenAuthentication([
 
 ### Cookie
 
-If token was not found yet, middleware tries to find `authorization` cookie. 
+If token is not found yet, middleware tries to find `authorization` cookie. 
 You can change cookie name using `cookie` option. 
-You can disabled authentication via cookie setting `cookie` option as null.
+You can disabled authentication via cookie by setting `cookie` option as null.
 
 ```php
 ...
@@ -135,7 +135,7 @@ $app->add(new TokenAuthentication([
 
 As a last resort, middleware tries to find `authorization` argument of route.
 You can change argument name using `argument` option. 
-You can disabled authentication via argument setting `argument` option as null.
+You can disabled authentication via argument by setting `argument` option as null.
 
 ```php
 ...
@@ -150,7 +150,7 @@ $app->add(new TokenAuthentication([
 ### Error
 
 By default on ocurred a fail on authentication, is sent a response on json format with a message (`Invalid Token` or `Not found Token`) and with the token (if found), with status `401 Unauthorized`.
-You can custom it by setting a callable function on `error` option.
+You can customize it by setting a callable function on `error` option.
 
 ```php
 ...
@@ -175,7 +175,7 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-This error function is called when `TokenAuthentication` catch an throwable class that implements `UnauthorizedExceptionInterface`.
+This error function is called when `TokenAuthentication` catches a throwable class that implements `UnauthorizedExceptionInterface`.
 
 ### Secure
 
