@@ -135,7 +135,7 @@ class TokenAuthentication
         return $response->withJson($res, 401, JSON_PRETTY_PRINT);
     }
 
-    public function findToken(Request $request)
+    public function findToken(Request &$request)
     {
         $tokenSearch = new TokenSearch([
             'header' => $this->options['header'],
@@ -146,7 +146,7 @@ class TokenAuthentication
         ]);
 
         $token = $tokenSearch($request);
-        $request->withAttribute('authorization', $token);
+        $request = $request->withAttribute('authorization', $token);
         $this->setResponseToken($token);
 
         return $token;
