@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace Dyorg\Middleware\TokenAuthentication\Example;
 
 class Auth
 {
@@ -10,7 +10,7 @@ class Auth
      */
     public function getUserByToken($token)
     {
-        if ($token != 'usertokensecret') {
+        if ($token !== 'usertokensecret') {
 
             /**
              * The throwable class must implement UnauthorizedExceptionInterface

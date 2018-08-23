@@ -1,9 +1,10 @@
 <?php
 
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 use Slim\App;
-use Slim\Middleware\TokenAuthentication;
+use Dyorg\Middleware\TokenAuthentication;
+use Dyorg\Middleware\TokenAuthentication\Example\Auth;
 
 $config = [
     'settings' => [
@@ -24,7 +25,7 @@ $authenticator = function($request, TokenAuthentication $tokenAuth){
     /**
      * Call authentication logic class
      */
-    $auth = new \app\Auth();
+    $auth = new Auth();
 
     /**
      * Verify if token is valid on database
@@ -39,7 +40,8 @@ $authenticator = function($request, TokenAuthentication $tokenAuth){
  */
 $app->add(new TokenAuthentication([
     'path' =>   '/restrict',
-    'authenticator' => $authenticator
+    'authenticator' => $authenticator,
+    'relaxed' => true
 ]));
 
 /**
@@ -47,7 +49,7 @@ $app->add(new TokenAuthentication([
  */
 $app->get('/', function($request, $response){
     $output = ['msg' => 'It is a public area'];
-    $response->withJson($output, 200, JSON_PRETTY_PRINT);
+    return $response->withJson($output, 200, JSON_PRETTY_PRINT);
 });
 
 /**
@@ -56,7 +58,7 @@ $app->get('/', function($request, $response){
  */
 $app->get('/restrict', function($request, $response){
     $output = ['msg' => 'It\'s a restrict area. Token authentication works!'];
-    $response->withJson($output, 200, JSON_PRETTY_PRINT);
+    return $response->withJson($output, 200, JSON_PRETTY_PRINT);
 });
 
 $app->run();

@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Slim\Middleware\TokenAuthentication;
+namespace Dyorg\Middleware\TokenAuthentication;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 

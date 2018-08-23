@@ -9,10 +9,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Slim\Middleware;
+namespace Dyorg\Middleware;
 
-use Slim\Middleware\TokenAuthentication\TokenSearch;
-use Slim\Middleware\TokenAuthentication\UnauthorizedExceptionInterface;
+use Dyorg\Middleware\TokenAuthentication\TokenSearch;
+use Dyorg\Middleware\TokenAuthentication\UnauthorizedExceptionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
