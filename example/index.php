@@ -48,7 +48,7 @@ $app->add(new TokenAuthentication([
  * Public route example
  */
 $app->get('/', function($request, $response){
-    $output = ['msg' => 'It is a public area'];
+    $output = ['message' => 'It\'s a public area'];
     return $response->withJson($output, 200, JSON_PRETTY_PRINT);
 });
 
@@ -57,7 +57,7 @@ $app->get('/', function($request, $response){
  * Our token is "usertokensecret"
  */
 $app->get('/restrict', function($request, $response){
-    $output = ['msg' => 'It\'s a restrict area. Token authentication works!'];
+    $output = ['message' => 'It\'s a restrict area. Token authentication works!'];
     return $response->withJson($output, 200, JSON_PRETTY_PRINT);
 });
 
