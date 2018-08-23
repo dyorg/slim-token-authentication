@@ -6,7 +6,6 @@ use Dyorg\Middleware\TokenAuthentication;
 use Dyorg\Middleware\TokenAuthentication\Example\App\AuthService;
 use Dyorg\Middleware\TokenAuthentication\TokenSearch;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 
 $config = [
