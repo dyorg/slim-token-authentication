@@ -2,9 +2,12 @@
 
 require_once '../vendor/autoload.php';
 
-use Slim\App;
 use Dyorg\Middleware\TokenAuthentication;
-use Dyorg\Middleware\TokenAuthentication\Example\Auth;
+use Dyorg\Middleware\TokenAuthentication\Example\App\AuthService;
+use Dyorg\Middleware\TokenAuthentication\TokenSearch;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\App;
 
 $config = [
     'settings' => [
@@ -14,24 +17,27 @@ $config = [
 
 $app = new App($config);
 
-$authenticator = function($request, TokenAuthentication $tokenAuth){
+$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch){
 
     /**
      * Try find authorization token via header, parameters, cookie or attribute
      * If token not found, return response with status 401 (unauthorized)
      */
-    $token = $tokenAuth->findToken($request);
+    $token = $tokenSearch->getToken($request);
 
     /**
      * Call authentication logic class
      */
-    $auth = new Auth();
+    $auth = new AuthService();
 
     /**
      * Verify if token is valid on database
      * If token isn't valid, must throw an UnauthorizedExceptionInterface
      */
-    $auth->getUserByToken($token);
+    $user = $auth->getUserByToken($token);
+
+
+    $request = $request->withAttribute('authenticated_user', $user);
 
 };
 

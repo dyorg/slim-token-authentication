@@ -11,7 +11,8 @@
 
 namespace Dyorg\Middleware\TokenAuthentication;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Dyorg\Middleware\TokenAuthentication\Exceptions\TokenNotFoundException;
+use Psr\Http\Message\ServerRequestInterface;
 
 class TokenSearch
 {
@@ -22,7 +23,18 @@ class TokenSearch
         $this->options = $options;
     }
 
-    public function __invoke(Request $request)
+    public function getToken(ServerRequestInterface &$request)
+    {
+        $token = $this->findToken($request);
+
+        if (!empty($this->options['attribute'])) {
+            $request = $request->withAttribute($this->options['attribute'], $token);
+        }
+
+        return $token;
+    }
+
+    private function findToken(ServerRequestInterface &$request)
     {
         /** Check for token on header */
         if (isset($this->options['header'])) {
@@ -43,8 +55,8 @@ class TokenSearch
         /** If nothing on parameters, try cookies */
         if (isset($this->options['cookie'])) {
             $cookie_params = $request->getCookieParams();
-            if (!empty($cookie_params[$this->options["cookie"]])) {
-                return $cookie_params[$this->options["cookie"]];
+            if (!empty($cookie_params[$this->options['cookie']])) {
+                return $cookie_params[$this->options['cookie']];
             };
         }
 
@@ -58,6 +70,6 @@ class TokenSearch
             }
         }
 
-        throw new TokenNotFoundException('Token not found');
+        throw new TokenNotFoundException('Authorization token not found');
     }
 }

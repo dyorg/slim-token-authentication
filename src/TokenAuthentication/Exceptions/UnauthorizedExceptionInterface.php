@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware\TokenAuthentication;
+namespace Dyorg\Middleware\TokenAuthentication\Exceptions;
 
 interface UnauthorizedExceptionInterface
 {

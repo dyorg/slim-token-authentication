@@ -1,8 +1,10 @@
 <?php
 
-namespace Dyorg\Middleware\TokenAuthentication\Example;
+namespace Dyorg\Middleware\TokenAuthentication\Example\App;
 
-class Auth
+use Dyorg\Middleware\TokenAuthentication\Example\App\Exceptions\UnauthorizedException;
+
+class AuthService
 {
     /**
      * It's only a validation example!
