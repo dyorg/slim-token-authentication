@@ -8,7 +8,7 @@ This middleware was designed to maintain easy to implement token authentication 
 Get the latest version with [Composer](http://getcomposer.org "Composer").
 
 ```bash
-composer require dyorg/slim-token-authentication
+composer require dyorg/slim-token-authentication "^0"
 ```
 
 ## Getting authentication
