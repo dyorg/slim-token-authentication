@@ -1,9 +1,10 @@
 # Slim Token Authentication
 
-This is a Token Authentication Middleware for Slim 3.0+. 
+This is a Token Authentication Middleware for Slim 3.0+.  
 This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
-Slim Token Authentication 1.x requires PHP 7.1 ou newer. For oldest PHP version you can use Slim Token Authentication 0.x. `
+Slim Token Authentication 1.x requires PHP 7.1 ou newer.  
+For oldest PHP version you can use [0.x version](https://github.com/dyorg/slim-token-authentication/tree/0.x).
 
 ## Installing
 
