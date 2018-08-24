@@ -46,7 +46,7 @@ $authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSe
  * Add token authentication middleware
  */
 $app->add(new TokenAuthentication([
-    'path' => ['/restrict'],
+    'path' => '/restrict',
     'authenticator' => $authenticator,
     'relaxed' => ['localhost', 'slim-token-authentication.local']
 ]));

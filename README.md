@@ -3,12 +3,14 @@
 This is a Token Authentication Middleware for Slim 3.0+. 
 This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
+Slim Token Authentication 1.x requires PHP 7.1 ou newer. For oldest PHP version you can use Slim Token Authentication 0.x. `
+
 ## Installing
 
 Get the latest version with [Composer](http://getcomposer.org "Composer").
 
 ```bash
-composer require dyorg/slim-token-authentication
+composer require dyorg/slim-token-authentication "^1.0"
 ```
 
 ## Getting authentication
@@ -18,18 +20,30 @@ When you create a new instance of `TokenAuthentication` you must pass an array w
 You need setting authenticator and path options for authentication to start working.
 
 ```php
-$authenticator = function($request, TokenAuthentication $tokenAuth){
+$authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSearch) {
 
-    # Search for token on header, parameter, cookie or attribute
-    $token = $tokenAuth->findToken($request);
-    
-    # Your method to make token validation
-    $user = User::auth_token($token);
-    
-    # If occured ok authentication continue to route
-    # before end you can storage the user informations or whatever
-    ...
-    
+    /**
+     * Try find authorization token via header, parameters, cookie or attribute
+     * If token not found, return response with status 401 (unauthorized)
+     */
+    $token = $tokenSearch->getToken($request);
+
+    /**
+     * Call authentication logic class
+     */
+    $auth = new AuthService();
+
+    /**
+     * Verify if token is valid on database
+     * If token isn't valid, must throw an UnauthorizedExceptionInterface
+     */
+    $user = $auth->getUserByToken($token);
+
+    /**
+     * Set authenticated user at attibutes (optional)
+     */
+    $request = $request->withAttribute('authenticated_user', $user);
+
 };
 
 $app = new App();
@@ -40,9 +54,9 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Find Token
+### Getting Token
 
-This middleware contains the method `findToken()`, you can access it from your authenticator method through the second param (`TokenAuthentication` instance). 
+Inside your authenticator clousure, do you can call `getToken` through `TokenSearch` object. 
 This method is able to search for authentication token on header, parameter, cookie or attribute.
 You can configure it through options settings.
 
@@ -82,7 +96,7 @@ $app->add(new TokenAuthentication([
 
 ### Header
 
-By default middleware tries to find token from `Authorization` header. You can change header name using `header` option.
+By default middleware tries to search token from `Authorization` header. You can change header name using `header` option.
 Is expected in Authorization header the value format as `Bearer <token>`, it is matched using a regular expression. 
 If you want to work without token type or with other token type, like `Basic <token>`, 
 you can change the regular expression pattern setting it on `regex` option.
@@ -147,6 +161,28 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
+### Attribute
+
+When token is found, it's storage into `authorization_token` attribute of ` ServerRequestInterface : $request` object. This behavior enables you to recovery the token posterioly on your application.
+
+```bash 
+$token = $request->getAttribute('authorization_token');
+```
+
+You can change attribute name using `attribute` option. 
+You can disabled the storing of token on the attributes by setting `attribute` option to null.
+
+```php
+...
+
+$app->add(new TokenAuthentication([
+    'path' => '/api',
+    'authenticator' => $authenticator,
+    'attribute' => 'token'
+]));
+```
+
+
 ### Error
 
 By default on ocurred a fail on authentication, is sent a response on json format with a message (`Invalid Token` or `Not found Token`) and with the token (if found), with status `401 Unauthorized`.
@@ -155,15 +191,16 @@ You can customize it by setting a callable function on `error` option.
 ```php
 ...
 
-$error = function($request, $response, TokenAuthentication $tokenAuth) {
-    $output = [];
-    $output['error'] = [
-        'msg' => $tokenAuth->getResponseMessage(),
-        'token' => $tokenAuth->getResponseToken(),
-        'status' => 401,
-        'error' => true
+$error = function(ServerRequestInterface $request, ResponseInterface $response, array $arguments) {
+    
+    $output = [
+        'message' => $arguments['message'],
+        'token' => $request->getAttribute('authorization_token'),
+        'success' => false
     ];
-    return $response->withJson($output, 401);
+    
+    return $response->withJson($output, 401, JSON_PRETTY_PRINT);
+    
 }
 
 $app = new App();
@@ -175,7 +212,7 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-This error function is called when `TokenAuthentication` catches a throwable class that implements `UnauthorizedExceptionInterface`.
+This error function is called when `TokenAuthentication` catches a throwable class that implements `UnauthorizedExceptionInterface`, or when your authenticator method returns `false`.
 
 ### Secure
 
@@ -204,7 +241,7 @@ $app->add(new TokenAuthentication([
     'path' => '/api',
     'authenticator' => $authenticator,
     'secure' => true,
-    'relaxed' => ['localhost', 'your-app.dev']
+    'relaxed' => ['localhost', 'my-application.local']
 ]));
 ```
 

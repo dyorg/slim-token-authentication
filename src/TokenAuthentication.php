@@ -151,12 +151,12 @@ class TokenAuthentication
         $this->options['relaxed'] = $relaxed;
     }
 
-    private function setPath(?$path) : void
+    private function setPath($path) : void
     {
         $this->options['path'] = $path;
     }
 
-    private function setPassthrough(?$passthrough) : void
+    private function setPassthrough($passthrough) : void
     {
         $this->options['passthrough'] = $passthrough;
     }

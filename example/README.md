@@ -6,23 +6,46 @@ See complete documentation on [Slim Token Authentication](https://github.com/dyo
 ## Installing dependencies
 
 ```bash
-composer update
+composer install
 ```
 
-## Making authentication via header
+## Setting example root directory
+
+If you are using virtual hosts, do you should setting the `/example` directory as root.   
+Code below shows the code pointing to the right path. 
+
+```bash
+<VirtualHost *:80> 
+    DocumentRoot "C:/laragon/www/slim-token-authentication/example"
+    ServerName slim-token-authentication.local
+    ServerAlias *.slim-token-authentication.local
+    <Directory "C:/laragon/www/slim-token-authentication/example">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+Otherwise, without virtual host, do you could access through `http://localhost/`.
+
+```bash 
+http://localhost/slim-token-authentication/example/
+``` 
+
+## Making authentication with header
+
+On your prompt via curl:
+
+```bash
+$ curl -i http://slim-token-authentication.local/restrict -H "Authorization: Bearer usertokensecret"
+```
+
+## Making authentication with query paramater
 
 On your prompt:
 
 ```bash
-$ curl -i http://localhost/slim-token-authentication/example/restrict -H "Authorization: Bearer usertokensecret"
-```
-
-## Making authentication via query paramater
-
-On your prompt:
-
-```bash
-$ curl -i http://localhost/slim-token-authentication/example/restrict?authorization=usertokensecret
+$ curl -i http://slim-token-authentication.local/restrict?authorization=usertokensecret
 ```
 
 Instead you can try authentication with parameter via your browser:
@@ -37,25 +60,30 @@ On success should return something like:
 
 ```bash
 HTTP/1.1 200 OK
-Date: Wed, 15 Jun 2016 21:26:09 GMT
-Server: Apache/2.4.12 (Win64) OpenSSL/1.0.1m PHP/5.6.9
-X-Powered-By: PHP/5.6.9
-Content-Length: 59
-Content-Type: text/html; charset=UTF-8
+Date: Fri, 24 Aug 2018 16:56:57 GMT
+Server: Apache/2.4.27 (Win64) OpenSSL/1.0.2l PHP/7.1.7
+X-Powered-By: PHP/7.1.7
+Content-Length: 70
+Content-Type: application/json;charset=utf-8
 
-{"msg":"It's a restrict area. Token authentication works!"}
+{
+    "message": "It's a restrict area. Token authentication works!"
+}
 ```
 
 With wrong token should return something like:
 
 ```bash
 HTTP/1.1 401 Unauthorized
-Date: Wed, 15 Jun 2016 21:28:26 GMT
-Server: Apache/2.4.12 (Win64) OpenSSL/1.0.1m PHP/5.6.9
-X-Powered-By: PHP/5.6.9
-Content-Length: 52
+Date: Fri, 24 Aug 2018 16:55:16 GMT
+Server: Apache/2.4.27 (Win64) OpenSSL/1.0.2l PHP/7.1.7
+X-Powered-By: PHP/7.1.7
+Content-Length: 65
 Content-Type: application/json;charset=utf-8
 
-{"message":"Invalid Token","token":"usertokenwrong"}
+{
+    "message": "Invalid Token",
+    "token": "usertokenwrong"
+}
 ```
 
