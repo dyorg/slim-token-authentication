@@ -16,7 +16,7 @@ $config = [
 
 $app = new App($config);
 
-$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) : bool {
+$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) {
 
     /**
      * Try find authorization token via header, parameters, cookie or attribute
