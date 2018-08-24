@@ -9,9 +9,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware\TokenAuthentication\Example\App\Exceptions;
+namespace Dyorg\TokenAuthentication\Example\App\Exceptions;
 
-use Dyorg\Middleware\TokenAuthentication\Exceptions\UnauthorizedExceptionInterface;
+use Dyorg\TokenAuthentication\Exceptions\UnauthorizedExceptionInterface;
 use Exception;
 
 class UnauthorizedException extends Exception implements UnauthorizedExceptionInterface

@@ -2,9 +2,9 @@
 
 require_once '../vendor/autoload.php';
 
-use Dyorg\Middleware\TokenAuthentication;
-use Dyorg\Middleware\TokenAuthentication\Example\App\AuthService;
-use Dyorg\Middleware\TokenAuthentication\TokenSearch;
+use Dyorg\TokenAuthentication;
+use Dyorg\TokenAuthentication\Example\App\AuthService;
+use Dyorg\TokenAuthentication\TokenSearch;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 

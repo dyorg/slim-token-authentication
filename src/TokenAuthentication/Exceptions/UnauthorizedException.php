@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware\TokenAuthentication\Exceptions;
+namespace Dyorg\TokenAuthentication\Exceptions;
 
 use Exception;
 

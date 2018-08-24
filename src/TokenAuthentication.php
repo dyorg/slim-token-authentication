@@ -10,11 +10,11 @@ declare(strict_types=1);
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware;
+namespace Dyorg;
 
-use Dyorg\Middleware\TokenAuthentication\Exceptions\UnauthorizedException;
-use Dyorg\Middleware\TokenAuthentication\Exceptions\UnauthorizedExceptionInterface;
-use Dyorg\Middleware\TokenAuthentication\TokenSearch;
+use Dyorg\TokenAuthentication\Exceptions\UnauthorizedException;
+use Dyorg\TokenAuthentication\Exceptions\UnauthorizedExceptionInterface;
+use Dyorg\TokenAuthentication\TokenSearch;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;

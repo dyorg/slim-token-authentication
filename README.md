@@ -23,7 +23,7 @@ You need setting authenticator and path options for authentication to start work
 $authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSearch) {
 
     /**
-     * Try find authorization token via header, parameters, cookie or attribute
+     * Try search authorization token via header, parameters, cookie or attribute
      * If token not found, return response with status 401 (unauthorized)
      */
     $token = $tokenSearch->getToken($request);

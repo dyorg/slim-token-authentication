@@ -10,9 +10,9 @@ declare(strict_types=1);
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware\TokenAuthentication;
+namespace Dyorg\TokenAuthentication;
 
-use Dyorg\Middleware\TokenAuthentication\Exceptions\TokenNotFoundException;
+use Dyorg\TokenAuthentication\Exceptions\TokenNotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class TokenSearch

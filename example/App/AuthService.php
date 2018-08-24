@@ -9,9 +9,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace Dyorg\Middleware\TokenAuthentication\Example\App;
+namespace Dyorg\TokenAuthentication\Example\App;
 
-use Dyorg\Middleware\TokenAuthentication\Example\App\Exceptions\UnauthorizedException;
+use Dyorg\TokenAuthentication\Example\App\Exceptions\UnauthorizedException;
 
 class AuthService
 {

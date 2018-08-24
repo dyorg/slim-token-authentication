@@ -30,13 +30,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Dyorg\\Middleware\\": "src"
+      "Dyorg\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Dyorg\\Middleware\\": "tests",
-      "Dyorg\\Middleware\\TokenAuthentication\\Example\\": "example"
+      "Dyorg\\": "tests",
+      "Dyorg\\TokenAuthentication\\Example\\": "example"
     }
   }
 }
