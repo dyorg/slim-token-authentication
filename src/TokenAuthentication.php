@@ -38,9 +38,7 @@ class TokenAuthentication
 
     public function __construct(array $options = [])
     {
-        $this->options['error'] = function($request, $response, $arguments){
-            return $this->dafaultError($request, $response, $arguments);
-        };
+        $this->options['error'] = [$this, 'dafaultError'];
 
         /** Rewrite options */
         $this->fill($options);
