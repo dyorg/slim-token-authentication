@@ -19,7 +19,7 @@ class AuthService
      * It's only a validation example!
      * You should search user (on your database or another repository) by authorization token
      */
-    public function getUserByToken($token)
+    public function getUserByToken(string $token) : array
     {
         if ($token !== 'usertokensecret') {
 

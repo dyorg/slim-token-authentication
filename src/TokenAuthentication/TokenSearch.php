@@ -18,12 +18,12 @@ class TokenSearch
 {
     private $options = [];
 
-    public function __construct($options = [])
+    public function __construct(array $options)
     {
         $this->options = $options;
     }
 
-    public function getToken(ServerRequestInterface &$request)
+    public function getToken(ServerRequestInterface &$request) : string
     {
         $token = $this->findToken($request);
 
@@ -34,7 +34,7 @@ class TokenSearch
         return $token;
     }
 
-    private function findToken(ServerRequestInterface &$request)
+    private function findToken(ServerRequestInterface $request) : string
     {
         /** Check for token on header */
         if (isset($this->options['header'])) {

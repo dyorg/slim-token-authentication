@@ -16,7 +16,7 @@ $config = [
 
 $app = new App($config);
 
-$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch){
+$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) : bool {
 
     /**
      * Try find authorization token via header, parameters, cookie or attribute
@@ -44,9 +44,9 @@ $authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch){
  * Add token authentication middleware
  */
 $app->add(new TokenAuthentication([
-    'path' =>   '/restrict',
+    'path' => ['/restrict'],
     'authenticator' => $authenticator,
-    'relaxed' => true
+    'secure' => false
 ]));
 
 /**

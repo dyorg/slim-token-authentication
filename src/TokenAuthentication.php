@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Slim Token Authentication Middleware
@@ -23,16 +24,16 @@ class TokenAuthentication
     private $options = [
         'secure' => true,
         'relaxed' => ['localhost', '127.0.0.1'],
-        'path' => [],
-        'passthrough' => [],
-        'authenticator' => null,
-        'error' => null,
         'header' => 'Authorization',
         'regex' => '/Bearer\s+(.*)$/i',
         'parameter' => 'authorization',
         'cookie' => 'authorization',
         'argument' => 'authorization',
-        'attribute' => 'authorization_token'
+        'attribute' => 'authorization_token',
+        'path' => null,
+        'passthrough' => null,
+        'authenticator' => null,
+        'error' => null
     ];
 
     public function __construct(array $options = [])
@@ -43,9 +44,12 @@ class TokenAuthentication
 
         /** Rewrite options */
         $this->fill($options);
+
+        if (is_null($this->options['authenticator']))
+            throw new RuntimeException('Authenticator option has not been setted.');
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) : ResponseInterface
     {
         try {
 
@@ -58,17 +62,11 @@ class TokenAuthentication
             $scheme = $request->getUri()->getScheme();
             $host = $request->getUri()->getHost();
             if ($scheme !== 'https' && $this->options['secure'] === true) {
-                if (!in_array($host, $this->options['relaxed']))
+                if (!in_array($host, (array) $this->options['relaxed']))
                     throw new UnauthorizedException('Required HTTPS for token authentication.');
             }
 
             /** Call custom authenticator function */
-            if (empty($this->options['authenticator']))
-                throw new RuntimeException('Authenticator option has not been setted.');
-
-            if (!is_callable($this->options['authenticator']))
-                throw new RuntimeException('Authenticator option is not callable.');
-
             $authenticator_response = $this->options['authenticator']($request, new TokenSearch($this->options));
             if ($authenticator_response === false)
                 throw new UnauthorizedException('Invalid authentication token.');
@@ -82,7 +80,7 @@ class TokenAuthentication
         }
     }
 
-    private function fill($options = [])
+    private function fill(array $options = []) : void
     {
         foreach ($options as $key => $value) {
             $method = 'set' . ucfirst($key);
@@ -92,7 +90,7 @@ class TokenAuthentication
         }
     }
 
-    public function shouldAuthenticate(ServerRequestInterface $request)
+    public function shouldAuthenticate(ServerRequestInterface $request) : bool
     {
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
@@ -116,17 +114,14 @@ class TokenAuthentication
         return false;
     }
 
-    public function errorHandler(ServerRequestInterface $request, ResponseInterface $response, $arguments = [])
+    public function errorHandler(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
     {
-        if (!empty($this->options['error'])) {
-
-            if (!is_callable($this->options['error']))
-                throw new RuntimeException('Error option is not callable.');
+        if (isset($this->options['error'])) {
 
             $error_response = $this->options['error']($request, $response, $arguments);
 
             if (!$error_response instanceof ResponseInterface)
-                throw new RuntimeException('Error function must return a ResponseInterface object.');
+                throw new RuntimeException('Error function must return a ResponseInterface object type.');
 
             $response = $error_response;
         }
@@ -134,139 +129,77 @@ class TokenAuthentication
         return $response;
     }
 
-    private function dafaultError(ServerRequestInterface $request, ResponseInterface $response, $arguments = [])
+    private function dafaultError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
     {
         $output = [];
 
         if (isset($arguments['message']))
             $output['message'] = $arguments['message'];
 
-        if (!empty($this->options['attribute'])) {
-            $token = $request->getAttribute($this->options['attribute']);
-            $output['token'] = $token;
+        if (isset($this->options['attribute'])) {
+            $output['token'] = $request->getAttribute($this->options['attribute']);
         }
 
         return $response->withJson($output, 401, JSON_PRETTY_PRINT);
     }
 
-    public function setSecure($secure)
+    private function setSecure(bool $secure) : void
     {
-        $this->options['secure'] = (bool) $secure;
-        return $this;
+        $this->options['secure'] = $secure;
     }
 
-    public function getSecure()
+    private function setRelaxed(?array $relaxed) : void
     {
-        return $this->options['secure'];
+        $this->options['relaxed'] = $relaxed;
     }
 
-    public function setRelaxed($relaxed)
+    private function setPath(?array $path) : void
     {
-        $this->options['relaxed'] = (array) $relaxed;
-        return $this;
+        $this->options['path'] = $path;
     }
 
-    public function getRelaxed()
+    private function setPassthrough(?array $passthrough) : void
     {
-        return $this->options['relaxed'];
+        $this->options['passthrough'] = $passthrough;
     }
 
-    public function setPath($path)
-    {
-        $this->options['path'] = (array) $path;
-        return $this;
-    }
-
-    public function getPath()
-    {
-        return $this->options['path'];
-    }
-
-    public function setPassthrough($passthrough)
-    {
-        $this->options['passthrough'] = (array) $passthrough;
-        return $this;
-    }
-
-    public function getPassthrough()
-    {
-        return $this->options['passthrough'];
-    }
-
-    public function setError(Callable $error)
+    private function setError(?callable $error) : void
     {
         $this->options['error'] = $error;
-        return $this;
     }
 
-    public function getError()
-    {
-        return $this->options['error'];
-    }
-
-    public function setAuthenticator(Callable $authenticator)
+    private function setAuthenticator(callable $authenticator) : void
     {
         $this->options['authenticator'] = $authenticator;
-        return $this;
     }
 
-    public function getAuthenticator()
-    {
-        return $this->options['authenticator'];
-    }
-
-    public function setHeader($header)
+    private function setHeader(?string $header) : void
     {
         $this->options['header'] = $header;
-        return $this;
     }
 
-    public function getHeader()
-    {
-        return $this->options['header'];
-    }
-
-    public function setRegex($regex)
+    private function setRegex(string $regex) : void
     {
         $this->options['regex'] = $regex;
-        return $this;
     }
 
-    public function getRegex()
-    {
-        return $this->options['regex'];
-    }
-
-    public function setParameter($parameter)
+    private function setParameter(?string $parameter) : void
     {
         $this->options['parameter'] = $parameter;
-        return $this;
     }
 
-    public function getParameter()
-    {
-        return $this->options['parameter'];
-    }
-
-    public function setArgument($argument)
+    private function setArgument(?string $argument) : void
     {
         $this->options['argument'] = $argument;
-        return $this;
     }
 
-    public function getArgument()
-    {
-        return $this->options['argument'];
-    }
-
-    public function setCookie($cookie)
+    private function setCookie(?string $cookie) : void
     {
         $this->options['cookie'] = $cookie;
-        return $this;
     }
 
-    public function getCookie()
+    private function setAttribute(?string $attribute) : void
     {
-        return $this->options['cookie'];
+        $this->options['attribute'] = $attribute;
     }
 }
