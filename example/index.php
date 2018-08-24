@@ -5,7 +5,7 @@ require_once '../vendor/autoload.php';
 use Dyorg\Middleware\TokenAuthentication;
 use Dyorg\Middleware\TokenAuthentication\Example\App\AuthService;
 use Dyorg\Middleware\TokenAuthentication\TokenSearch;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 
 $config = [
@@ -16,7 +16,7 @@ $config = [
 
 $app = new App($config);
 
-$authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) {
+$authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSearch) {
 
     /**
      * Try find authorization token via header, parameters, cookie or attribute
@@ -35,7 +35,9 @@ $authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) 
      */
     $user = $auth->getUserByToken($token);
 
-
+    /**
+     * Set authenticated user at attibutes
+     */
     $request = $request->withAttribute('authenticated_user', $user);
 
 };
@@ -46,7 +48,7 @@ $authenticator = function(RequestInterface &$request, TokenSearch $tokenSearch) 
 $app->add(new TokenAuthentication([
     'path' => ['/restrict'],
     'authenticator' => $authenticator,
-    'secure' => false
+    'relaxed' => ['localhost', 'slim-token-authentication.local']
 ]));
 
 /**
