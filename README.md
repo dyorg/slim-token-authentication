@@ -1,9 +1,17 @@
 # Slim Token Authentication
 
+[![Latest Version](https://img.shields.io/github/release/dyorg/slim-token-authentication.svg?style=flat-square)](https://github.com/dyorg/slim-token-authentication/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/dyorg/slim-token-authentication.svg?style=flat-square)](https://scrutinizer-ci.com/g/dyorg/slim-token-authentication/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/dyorg/slim-token-authentication.svg?style=flat-square)](https://scrutinizer-ci.com/g/dyorg/slim-token-authentication)
+[![Total Downloads](https://img.shields.io/packagist/dt/dyorg/slim-token-authentication.svg?style=flat-square)](https://packagist.org/packages/dyorg/slim-token-authentication)
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/9f4b4c07-bfbb-4bdb-a297-c914815531d9/big.png)](https://insight.sensiolabs.com/projects/9f4b4c07-bfbb-4bdb-a297-c914815531d9)
+
 This is a Token Authentication Middleware for Slim 3.0+.  
 This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
-Slim Token Authentication 1.x requires PHP 7.1 ou newer.  
+Slim Token Authentication [1.x version](https://github.com/dyorg/slim-token-authentication/tree/1.x) requires PHP 7.1 ou newer.  
 For oldest PHP version you can use [0.x version](https://github.com/dyorg/slim-token-authentication/tree/0.x).
 
 ## Installing
