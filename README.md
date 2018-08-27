@@ -2,6 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/dyorg/slim-token-authentication.svg?style=flat-square)](https://github.com/dyorg/slim-token-authentication/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://travis-ci.com/dyorg/slim-token-authentication.svg?branch=1.x)](https://travis-ci.com/dyorg/slim-token-authentication)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/dyorg/slim-token-authentication.svg?style=flat-square)](https://scrutinizer-ci.com/g/dyorg/slim-token-authentication/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/dyorg/slim-token-authentication.svg?style=flat-square)](https://scrutinizer-ci.com/g/dyorg/slim-token-authentication)
 [![Total Downloads](https://img.shields.io/packagist/dt/dyorg/slim-token-authentication.svg?style=flat-square)](https://packagist.org/packages/dyorg/slim-token-authentication)
