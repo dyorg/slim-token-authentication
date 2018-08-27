@@ -59,7 +59,14 @@ You must set one or more routes to be restricted by authentication, setting it o
 $app = new App();
 
 $app->add(new TokenAuthentication([
-    'path' => '/api', /* or ['/api', '/docs'] */
+    'path' => [
+        '/api',             // if string 
+        '/api/*' => [],     // or empty array - will be used for all methods
+        'api/user' => [
+            'post',           // or just for defined methods
+            'delete'
+        ]    
+    ]
     'authenticator' => $authenticator
 ]));
 ```
@@ -74,11 +81,18 @@ You can configure which routes do not require authentication, setting it on `pas
 $app = new App();
 
 $app->add(new TokenAuthentication([
-    'path' => '/api',
-    'passthrough' => '/api/auth', /* or ['/api/auth', '/api/test'] */
+    'path' => ['/api/user/*'],
+    'passthrough' => [
+        '/api/user/' => [
+            'get'
+        ],
+        '/api/user/login'
+    ]
     'authenticator' => $authenticator
 ]));
 ```
+---
+In both cases "path" and "passthrough" available to define http method  
 
 ### Header
 

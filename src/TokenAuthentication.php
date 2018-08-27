@@ -85,24 +85,42 @@ class TokenAuthentication
         }
     }
 
+
     public function shouldAuthenticate(Request $request)
     {
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
 
         /** If request path is matches passthrough should not authenticate. */
-        foreach ((array)$this->options["passthrough"] as $passthrough) {
+        foreach ((array)$this->options["passthrough"] as $passthrough => $method) {
             $passthrough = rtrim($passthrough, "/");
+
+            /** If path defined as string, we use this little hack */
+            if($passthrough === '0') {
+                $passthrough    = $method;
+                $method         = null;
+            }
+
             if (preg_match("@^{$passthrough}(/.*)?$@", $uri)) {
-                return false;
+                if((in_array(strtolower($request->getMethod()), (array)$method)) || empty((array)$method)) {
+                    return false;
+                }
             }
         }
 
         /** Otherwise check if path matches and we should authenticate. */
-        foreach ((array)$this->options["path"] as $path) {
+        foreach ((array)$this->options["path"] as $path => $method) {
             $path = rtrim($path, "/");
+
+            /** If path defined as string, we use this little hack */
+            if($path === '0') {
+                $path   = $method;
+                $method = null;
+            }
             if (preg_match("@^{$path}(/.*)?$@", $uri)) {
-                return true;
+                if((in_array(strtolower($request->getMethod()), (array)$method)) || empty((array)$method)) {
+                    return true;
+                }
             }
         }
 
