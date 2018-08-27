@@ -3,17 +3,18 @@ sudo: false
 language: php
 
 php:
+  - 7.1
+  - 7.2
+  - nightly
+  - hhvm
 
- - 7.1
+allow_failures:
 
- - 7.2
-
- - hhvm
+  - php: nightly
 
 before_script:
+  - composer self-update
+  - composer install --prefer-source --no-interaction --dev
 
- - composer self-update
-
- - composer install --prefer-source --no-interaction --dev
-
-script: phpunit
+script:
+  - vendor/bin/phpunit
