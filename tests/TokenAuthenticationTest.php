@@ -46,7 +46,7 @@ class TokenAuthenticationTest extends TestCase
     public function expect_type_error_when_authenticator_is_not_callable()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be callable/');
+        $this->expectExceptionMessageRegExp('/must be.*callable/');
 
         new TokenAuthentication([
             'authenticator' => 'not_callable'
@@ -57,7 +57,7 @@ class TokenAuthenticationTest extends TestCase
     public function expect_type_error_when_error_is_not_callable()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be callable/');
+        $this->expectExceptionMessageRegExp('/must be.*callable/');
 
         new TokenAuthentication([
             'error' => 'not_callable'
@@ -68,7 +68,7 @@ class TokenAuthenticationTest extends TestCase
     public function expect_type_error_when_secure_is_not_boolean()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be.*boolean/');
+        $this->expectExceptionMessageRegExp('/must be.*bool/');
 
         new TokenAuthentication([
             'authenticator' => [$this, 'valid_authenticator'],
