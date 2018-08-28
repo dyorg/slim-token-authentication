@@ -15,6 +15,7 @@ namespace Dyorg;
 use Dyorg\TokenAuthentication\Exceptions\UnauthorizedException;
 use Dyorg\TokenAuthentication\Exceptions\UnauthorizedExceptionInterface;
 use Dyorg\TokenAuthentication\TokenSearch;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -36,7 +37,7 @@ class TokenAuthentication
         'error' => null
     ];
 
-    public function __construct(array $options = [])
+    public function __construct(array $options)
     {
         $this->options['error'] = [$this, 'dafaultError'];
 
@@ -44,7 +45,7 @@ class TokenAuthentication
         $this->fill($options);
 
         if (is_null($this->options['authenticator']))
-            throw new RuntimeException('Authenticator option has not been setted.');
+            throw new InvalidArgumentException('Authenticator option has not been setted.');
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) : ResponseInterface
@@ -88,7 +89,7 @@ class TokenAuthentication
         }
     }
 
-    public function shouldAuthenticate(ServerRequestInterface $request) : bool
+    private function shouldAuthenticate(ServerRequestInterface $request) : bool
     {
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
@@ -112,7 +113,7 @@ class TokenAuthentication
         return false;
     }
 
-    public function errorHandler(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
+    private function errorHandler(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
     {
         if (isset($this->options['error'])) {
 
