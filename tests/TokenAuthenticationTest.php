@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
- * User: HomeOffice
+ * User: Dyorg Washington G. Almeida
  * Date: 27/08/2018
  * Time: 21:54
  */
@@ -9,12 +10,27 @@
 namespace Dyorg;
 
 use Dyorg\TokenAuthentication\Exceptions\TokenNotFoundException;
+use Dyorg\TokenAuthentication\TokenSearch;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Http\Environment;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Http\Uri;
 
 class TokenAuthenticationTest extends TestCase
 {
-    public  function valid_authenticator()
+    private static $token = 'VGhpcyBpcyBzb21lIHRleHQgdG8gY29udmVydCB2aWEgQ3J5cHQu';
+
+    private static $user = [ 'name' => 'Acme' ];
+
+    public function validAuthenticator(ServerRequestInterface &$request, TokenSearch $tokenSearch)
     {
+        $token = $tokenSearch->getToken($request);
+
+        $request = $request->withAttribute('user_from_inside_authenticator', self::$user);
+
         return true;
     }
 
@@ -23,56 +39,162 @@ class TokenAuthenticationTest extends TestCase
         throw new TokenNotFoundException;
     }
 
-    /** @test */
-    public function token_authentication_is_correctly_instantiated()
+    public function test_token_authentication_is_instantiable()
     {
         $token_authentication = new TokenAuthentication([
-            'authenticator' => [$this, 'valid_authenticator']
+            'authenticator' => [$this, 'validAuthenticator']
         ]);
 
         $this->assertInstanceOf(TokenAuthentication::class, $token_authentication);
     }
 
-    /** @test */
-    public function expect_exception_when_authenticator_is_not_especified()
+    /**
+     * @dataProvider invalidCallables
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /authenticator.+not.+setted/i
+     */
+    public function test_exception_when_authenticator_is_not_especified()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/authenticator/i');
-
         new TokenAuthentication([]);
     }
 
-    /** @test */
-    public function expect_type_error_when_authenticator_is_not_callable()
+    public function invalidCallables()
     {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be.*callable/');
+        return [
+            [''],
+            [0],
+            [1],
+            [true],
+            [false],
+            ['callable'],
+            ['string'],
+            [[]],
+            [['acme', 'corp']]
+        ];
+    }
 
+    /**
+     * @dataProvider invalidCallables
+     * @expectedException \TypeError
+     * @expectedExceptionMessageRegExp /must be.+callable/
+     */
+    public function test_exception_when_authenticator_is_not_callable($invalid_callable)
+    {
         new TokenAuthentication([
-            'authenticator' => 'not_callable'
+            'authenticator' => $invalid_callable
         ]);
     }
 
-    /** @test */
-    public function expect_type_error_when_error_is_not_callable()
+    /**
+     * @dataProvider invalidCallables
+     * @expectedException \TypeError
+     * @expectedExceptionMessageRegExp /must be.+callable/
+     */
+    public function test_exception_when_error_is_not_callable($invalid_callable)
     {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be.*callable/');
-
         new TokenAuthentication([
-            'error' => 'not_callable'
+            'authenticator' => [$this, 'validAuthenticator'],
+            'error' => $invalid_callable
         ]);
     }
 
-    /** @test */
-    public function expect_type_error_when_secure_is_not_boolean()
+    public function invalidBoolean()
     {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessageRegExp('/must be.*bool/');
+        return [
+            [''],
+            [0],
+            [1],
+            [false],
+            [true],
+            [0.1],
+            ['string'],
+            [[]],
+            [['acme', 'corp']]
+        ];
+    }
 
+    public function test_should_found_token_from_header()
+    {
+        $request = Request::createFromEnvironment(Environment::mock())
+            ->withUri(Uri::createFromString('https://example.com/api'))
+            ->withHeader('Authorization', 'Bearer ' . self::$token );
+
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $auth = new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+            'path' => '/api'
+        ]);
+
+        $response = $auth($request, new Response(), $next);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$user['name'], $request->getAttribute('user_from_inside_authenticator')['name']);
+    }
+
+    public function test_should_found_token_from_header_with_custom_regex()
+    {
         new TokenAuthentication([
-            'authenticator' => [$this, 'valid_authenticator'],
-            'secure' => ['not', 'boolean']
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_found_token_from_cookie()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_found_token_from_argument()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_found_token_from_query_string_parameter()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_return_token_into_custom_attribute()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_return_attributes_setted_inside_authenticator()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_return_default_error()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_return_custom_error()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+    }
+
+    public function test_should_return_none_error()
+    {
+        new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
         ]);
     }
 }

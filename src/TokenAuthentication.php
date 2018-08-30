@@ -48,7 +48,7 @@ class TokenAuthentication
             throw new InvalidArgumentException('Authenticator option has not been setted.');
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) : ResponseInterface
+    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response, $next) : ResponseInterface
     {
         try {
 
@@ -82,9 +82,11 @@ class TokenAuthentication
     private function fill(array $options = []) : void
     {
         foreach ($options as $key => $value) {
-            $method = 'set' . ucfirst($key);
-            if (method_exists($this, $method)) {
-                call_user_func([$this, $method], $value);
+            $method_setter = 'set' . ucfirst($key);
+            if (method_exists($this, $method_setter)) {
+                call_user_func([$this, $method_setter], $value);
+            } else if (array_key_exists($key, $this->options)) {
+                $this->options[$key] = $value;
             }
         }
     }
@@ -128,7 +130,7 @@ class TokenAuthentication
         return $response;
     }
 
-    private function dafaultError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
+    protected function dafaultError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
     {
         $output = [];
 
@@ -142,62 +144,52 @@ class TokenAuthentication
         return $response->withJson($output, 401, JSON_PRETTY_PRINT);
     }
 
-    private function setSecure(bool $secure) : void
+    protected function setSecure(bool $secure) : void
     {
         $this->options['secure'] = $secure;
     }
 
-    private function setRelaxed(?array $relaxed) : void
+    protected function setRelaxed(?array $relaxed) : void
     {
         $this->options['relaxed'] = $relaxed;
     }
 
-    private function setPath($path) : void
-    {
-        $this->options['path'] = $path;
-    }
-
-    private function setPassthrough($passthrough) : void
-    {
-        $this->options['passthrough'] = $passthrough;
-    }
-
-    private function setError(?callable $error) : void
+    protected function setError(?callable $error) : void
     {
         $this->options['error'] = $error;
     }
 
-    private function setAuthenticator(callable $authenticator) : void
+    protected function setAuthenticator(callable $authenticator) : void
     {
         $this->options['authenticator'] = $authenticator;
     }
 
-    private function setHeader(?string $header) : void
+    protected function setHeader(?string $header) : void
     {
         $this->options['header'] = $header;
     }
 
-    private function setRegex(string $regex) : void
+    protected function setRegex(string $regex) : void
     {
         $this->options['regex'] = $regex;
     }
 
-    private function setParameter(?string $parameter) : void
+    protected function setParameter(?string $parameter) : void
     {
         $this->options['parameter'] = $parameter;
     }
 
-    private function setArgument(?string $argument) : void
+    protected function setArgument(?string $argument) : void
     {
         $this->options['argument'] = $argument;
     }
 
-    private function setCookie(?string $cookie) : void
+    protected function setCookie(?string $cookie) : void
     {
         $this->options['cookie'] = $cookie;
     }
 
-    private function setAttribute(?string $attribute) : void
+    protected function setAttribute(?string $attribute) : void
     {
         $this->options['attribute'] = $attribute;
     }

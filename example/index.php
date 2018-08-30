@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once '../vendor/autoload.php';
 
@@ -47,7 +48,7 @@ $authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSe
  */
 $app->add(new TokenAuthentication([
     'path' => '/restrict',
-    'authenticator' => '$authenticator',
+    'authenticator' => $authenticator,
     'relaxed' => ['localhost', 'slim-token-authentication.local']
 ]));
 
