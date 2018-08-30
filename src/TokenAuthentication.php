@@ -74,7 +74,7 @@ class TokenAuthentication
 
         } catch (UnauthorizedExceptionInterface $e) {
 
-            return $this->errorHandler($request, $response, ['message' => $e->getMessage()]);
+            return $this->errorHandler($request, $response, $e);
 
         }
     }
@@ -115,11 +115,11 @@ class TokenAuthentication
         return false;
     }
 
-    private function errorHandler(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
+    private function errorHandler(ServerRequestInterface $request, ResponseInterface $response, UnauthorizedExceptionInterface $e) : ResponseInterface
     {
         if (isset($this->options['error'])) {
 
-            $error_response = $this->options['error']($request, $response, $arguments);
+            $error_response = $this->options['error']($request, $response, $e);
 
             if (!$error_response instanceof ResponseInterface)
                 throw new RuntimeException('Error function must return a ResponseInterface object type.');
@@ -130,12 +130,11 @@ class TokenAuthentication
         return $response;
     }
 
-    protected function dafaultError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = []) : ResponseInterface
+    protected function dafaultError(ServerRequestInterface $request, ResponseInterface $response, UnauthorizedExceptionInterface $e) : ResponseInterface
     {
-        $output = [];
-
-        if (isset($arguments['message']))
-            $output['message'] = $arguments['message'];
+        $output = [
+            'message' => $e->getMessage()
+        ];
 
         if (isset($this->options['attribute'])) {
             $output['token'] = $request->getAttribute($this->options['attribute']);

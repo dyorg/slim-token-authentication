@@ -11,7 +11,7 @@
 
 namespace Dyorg\TokenAuthentication\Exceptions;
 
-interface UnauthorizedExceptionInterface
+interface UnauthorizedExceptionInterface extends \Throwable
 {
 
 }

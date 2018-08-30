@@ -98,21 +98,6 @@ class TokenAuthenticationTest extends TestCase
         ]);
     }
 
-    public function invalidBoolean()
-    {
-        return [
-            [''],
-            [0],
-            [1],
-            [false],
-            [true],
-            [0.1],
-            ['string'],
-            [[]],
-            [['acme', 'corp']]
-        ];
-    }
-
     public function test_should_found_token_from_header()
     {
         $request = Request::createFromEnvironment(Environment::mock())
