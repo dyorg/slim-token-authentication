@@ -47,12 +47,6 @@ class TokenSearch
             }
         }
 
-        /** If nothing on header, try query parameters */
-        if (isset($this->options['parameter'])) {
-            if (!empty($request->getQueryParams()[$this->options['parameter']]))
-                return $request->getQueryParams()[$this->options['parameter']];
-        }
-
         /** If nothing on parameters, try cookies */
         if (isset($this->options['cookie'])) {
             $cookie_params = $request->getCookieParams();
@@ -61,14 +55,10 @@ class TokenSearch
             };
         }
 
-        /** If nothing until now, check argument as last try */
-        if (isset($this->options['argument'])) {
-            if ($route = $request->getAttribute('route')) {
-                $argument = $route->getArgument($this->options['argument']);
-                if (!empty($argument)) {
-                    return $argument;
-                }
-            }
+        /** If nothing on header, try query parameters */
+        if (isset($this->options['parameter'])) {
+            if (!empty($request->getQueryParams()[$this->options['parameter']]))
+                return $request->getQueryParams()[$this->options['parameter']];
         }
 
         throw new TokenNotFoundException('Authorization token not found');

@@ -29,7 +29,6 @@ class TokenAuthentication
         'regex' => '/Bearer\s+(.*)$/i',
         'parameter' => 'authorization',
         'cookie' => 'authorization',
-        'argument' => 'authorization',
         'attribute' => 'authorization_token',
         'path' => null,
         'passthrough' => null,
@@ -176,11 +175,6 @@ class TokenAuthentication
     protected function setParameter(?string $parameter) : void
     {
         $this->options['parameter'] = $parameter;
-    }
-
-    protected function setArgument(?string $argument) : void
-    {
-        $this->options['argument'] = $argument;
     }
 
     protected function setCookie(?string $cookie) : void
