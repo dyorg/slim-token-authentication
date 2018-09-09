@@ -29,7 +29,8 @@ class TokenAuthentication
         'regex' => '/Bearer\s+(.*)$/i',
         'parameter' => 'authorization',
         'cookie' => 'authorization',
-        'argument' => 'authorization'
+        'argument' => 'authorization',
+        'environment' => 'REDIRECT_HTTP_AUTHORIZATION'
     ];
 
     private $response = [];
@@ -142,7 +143,8 @@ class TokenAuthentication
             'regex' => $this->options['regex'],
             'parameter' => $this->options['parameter'],
             'cookie' => $this->options['cookie'],
-            'argument' => $this->options['argument']
+            'argument' => $this->options['argument'],
+            'environment' => $this->options['environment']
         ]);
 
         $token = $tokenSearch($request);
