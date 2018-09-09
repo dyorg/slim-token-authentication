@@ -34,6 +34,16 @@ class TokenSearch
             }
         }
 
+        /** If using PHP in CGI mode and non standard environment **/
+        $server_params = $request->getServerParams();
+        if (isset($server_params[ $this->options["environment"]])) 
+        {
+            $header = $server_params[ $this->options["environment"]];
+            if (preg_match($this->options['regex'], $header, $matches)) {
+                return $matches[1];
+            }
+        }
+
         /** If nothing on header, try query parameters */
         if (isset($this->options['parameter'])) {
             if (!empty($request->getQueryParams()[$this->options['parameter']]))
