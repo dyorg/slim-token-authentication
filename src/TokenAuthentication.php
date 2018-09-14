@@ -126,7 +126,7 @@ class TokenAuthentication
             $response = $error_response;
         }
 
-        return $response;
+        return $response->withStatus(401);
     }
 
     protected function dafaultError(ServerRequestInterface $request, ResponseInterface $response, UnauthorizedExceptionInterface $e) : ResponseInterface
