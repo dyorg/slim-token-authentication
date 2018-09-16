@@ -344,7 +344,7 @@ class TokenAuthenticationTest extends TestCase
         $response = $auth($request, new Response(), $this->next());
 
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(self::$wrong_token_message, json_encode((string) $response->getBody()));
+        $this->assertEquals(self::$wrong_token_message, json_decode((string) $response->getBody())->message);
     }
 
     public function test_should_return_401_with_custom_error()
@@ -356,14 +356,10 @@ class TokenAuthenticationTest extends TestCase
         $error = function(ServerRequestInterface $request, ResponseInterface $response, UnauthorizedExceptionInterface $e){
 
             $output = [
-                'message' => $e->getMessage()
+                'custom_message' => $e->getMessage()
             ];
 
-            if (isset($this->options['attribute'])) {
-                $output['token'] = $request->getAttribute($this->options['attribute']);
-            }
-
-            return $response->withJson($output, 401, JSON_PRETTY_PRINT);
+            return $response->withJson($output);
 
         };
 
@@ -376,6 +372,7 @@ class TokenAuthenticationTest extends TestCase
         $response = $auth($request, new Response(), $this->next());
 
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(self::$token_invalid, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$wrong_token_message, json_decode((string) $response->getBody())->custom_message);
+
     }
 }
