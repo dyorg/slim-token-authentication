@@ -7,8 +7,6 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/dyorg/slim-token-authentication.svg?style=flat-square)](https://scrutinizer-ci.com/g/dyorg/slim-token-authentication)
 [![Total Downloads](https://img.shields.io/packagist/dt/dyorg/slim-token-authentication.svg?style=flat-square)](https://packagist.org/packages/dyorg/slim-token-authentication)
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/9f4b4c07-bfbb-4bdb-a297-c914815531d9/big.png)](https://insight.sensiolabs.com/projects/9f4b4c07-bfbb-4bdb-a297-c914815531d9)
-
 This is a Token Authentication Middleware for Slim 3.0+.  
 This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
@@ -88,9 +86,9 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Passthrough
+### Except
 
-You can configure which routes do not require authentication, setting it on `passthrough` option.
+You can configure which routes do not require authentication, setting it on `except` option.
 
 ```php
 ...
@@ -99,7 +97,7 @@ $app = new App();
 
 $app->add(new TokenAuthentication([
     'path' => '/api',
-    'passthrough' => '/api/auth', /* or ['/api/auth', '/api/test'] */
+    'except' => '/api/auth', /* or ['/api/auth', '/api/test'] */
     'authenticator' => $authenticator
 ]));
 ```
@@ -123,25 +121,9 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Parameter
-
-If token is not found in header, middleware tries to find `authorization` query parameter. 
-You can change parameter name using `parameter` option. 
-You can disable authentication via parameter by setting `parameter` option as null.
-
-```php
-...
-
-$app->add(new TokenAuthentication([
-    'path' => '/api',
-    'authenticator' => $authenticator,
-    'parameter' => 'token'
-]));
-```
-
 ### Cookie
 
-If token is not found yet, middleware tries to find `authorization` cookie. 
+If token is not found into headers, middleware tries to find `authorization` cookie. 
 You can change cookie name using `cookie` option. 
 You can disabled authentication via cookie by setting `cookie` option as null.
 
@@ -155,11 +137,13 @@ $app->add(new TokenAuthentication([
 ]));
 ```
 
-### Argument
+### Parameter
 
-As a last resort, middleware tries to find `authorization` argument of route.
-You can change argument name using `argument` option. 
-You can disabled authentication via argument by setting `argument` option as null.
+As a last resort, middleware tries to find `authorization` query parameter. 
+You can change parameter name using `parameter` option. 
+You can disable authentication via parameter by setting `parameter` option as null.
+
+Be Careful! User tokens shouldn't be send by parameters in production environment, it's represent a potential security risk. Prefer use header or cookie options. 
 
 ```php
 ...
@@ -167,7 +151,7 @@ You can disabled authentication via argument by setting `argument` option as nul
 $app->add(new TokenAuthentication([
     'path' => '/api',
     'authenticator' => $authenticator,
-    'argument' => 'token'
+    'parameter' => 'token'
 ]));
 ```
 
@@ -201,10 +185,10 @@ You can customize it by setting a callable function on `error` option.
 ```php
 ...
 
-$error = function(ServerRequestInterface $request, ResponseInterface $response, array $arguments) {
+$error = function(ServerRequestInterface $request, ResponseInterface $response, UnauthorizedExceptionInterface $exception) {
     
     $output = [
-        'message' => $arguments['message'],
+        'message' => $exception->getMessage(),
         'token' => $request->getAttribute('authorization_token'),
         'success' => false
     ];
