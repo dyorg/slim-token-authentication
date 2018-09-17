@@ -31,7 +31,7 @@ class TokenAuthentication
         'cookie' => 'authorization',
         'attribute' => 'authorization_token',
         'path' => null,
-        'passthrough' => null,
+        'except' => null,
         'authenticator' => null,
         'error' => null
     ];
@@ -61,7 +61,7 @@ class TokenAuthentication
             $host = $request->getUri()->getHost();
             if ($scheme !== 'https' && $this->options['secure'] === true) {
                 if (!in_array($host, (array) $this->options['relaxed']))
-                    throw new UnauthorizedException('Required HTTPS for token authentication.');
+                    throw new UnauthorizedException('Required HTTPS for token authentication.'.$host);
             }
 
             /** Call custom authenticator function */
@@ -95,10 +95,10 @@ class TokenAuthentication
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
 
-        /** If request path is matches passthrough should not authenticate. */
-        foreach ((array) $this->options['passthrough'] as $passthrough) {
-            $passthrough = rtrim($passthrough, '/');
-            if (preg_match("@^{$passthrough}(/.*)?$@", $uri)) {
+        /** If request path is matches except should not authenticate. */
+        foreach ((array) $this->options['except'] as $except) {
+            $except = rtrim($except, '/');
+            if (preg_match("@^{$except}(/.*)?$@", $uri)) {
                 return false;
             }
         }
