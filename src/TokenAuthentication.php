@@ -29,7 +29,7 @@ class TokenAuthentication
         'regex' => '/Bearer\s+(.*)$/i',
         'parameter' => 'authorization',
         'cookie' => 'authorization',
-        'attribute' => 'authorization_token',
+        'attribute' => 'authorization',
         'path' => null,
         'except' => null,
         'authenticator' => null,
@@ -47,7 +47,7 @@ class TokenAuthentication
             throw new InvalidArgumentException('Authenticator option has not been setted.');
     }
 
-    public function __invoke(ServerRequestInterface &$request, ResponseInterface $response, $next) : ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next) : ResponseInterface
     {
         try {
 

@@ -49,7 +49,11 @@ $authenticator = function(ServerRequestInterface &$request, TokenSearch $tokenSe
 $app->add(new TokenAuthentication([
     'path' => '/restrict',
     'authenticator' => $authenticator,
-    'relaxed' => ['localhost', 'slim-token-authentication.local']
+    'relaxed' => [
+        'localhost',
+        '127.0.0.1',
+        'slim-token-authentication.local'
+    ]
 ]));
 
 /**

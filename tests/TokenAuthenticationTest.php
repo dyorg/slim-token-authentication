@@ -52,13 +52,6 @@ class TokenAuthenticationTest extends TestCase
         return true;
     }
 
-    public function next() : callable
-    {
-        return function (ServerRequestInterface $request, ResponseInterface $response) {
-            return $response;
-        };
-    }
-
     public function test_token_authentication_is_instantiable()
     {
         $token_authentication = new TokenAuthentication([
@@ -129,10 +122,16 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_found_token_from_default_header()
@@ -146,10 +145,16 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_return_401_and_found_token()
@@ -163,10 +168,14 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(self::$token_invalid, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token_invalid, json_decode((string) $response->getBody())->token);
     }
 
     public function test_should_return_401_and_not_found_token()
@@ -179,10 +188,14 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(null, $request->getAttribute('authorization_token'));
+        $this->assertEquals(null, json_decode((string) $response->getBody())->token);
     }
 
     public function test_should_return_401_when_authorizator_return_false()
@@ -196,7 +209,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -213,10 +230,16 @@ class TokenAuthenticationTest extends TestCase
             'header' => 'X-Token'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_found_token_from_custom_header_with_custom_regex()
@@ -232,10 +255,16 @@ class TokenAuthenticationTest extends TestCase
             'regex' => '/^Custom\s(.*)$/'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_return_token_into_custom_attribute()
@@ -250,10 +279,16 @@ class TokenAuthenticationTest extends TestCase
             'attribute' => 'token'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('token');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_found_token_from_cookie()
@@ -269,10 +304,16 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_found_token_from_custom_cookie()
@@ -289,10 +330,16 @@ class TokenAuthenticationTest extends TestCase
             'cookie' => 'cookie-token'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_found_token_from_query_string_parameter()
@@ -306,10 +353,16 @@ class TokenAuthenticationTest extends TestCase
             'parameter' => 'token_parameter'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$token, $request->getAttribute('authorization_token'));
+        $this->assertEquals(self::$token, $response->getBody());
     }
 
     public function test_should_return_attributes_setted_inside_authenticator()
@@ -323,10 +376,16 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $user_name = $request->getAttribute('user_from_inside_authenticator')['name'];
+            $response->getBody()->write($user_name);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(self::$user['name'], $request->getAttribute('user_from_inside_authenticator')['name']);
+        $this->assertEquals(self::$user['name'], $response->getBody());
     }
 
     public function test_should_return_401_without_error_method()
@@ -341,10 +400,14 @@ class TokenAuthenticationTest extends TestCase
             'error' => null
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(self::$token_invalid, $request->getAttribute('authorization_token'));
+        $this->assertEmpty((string) $response->getBody());
     }
 
     public function test_should_return_401_with_message()
@@ -358,7 +421,13 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(self::$wrong_token_message, json_decode((string) $response->getBody())->message);
@@ -386,7 +455,13 @@ class TokenAuthenticationTest extends TestCase
             'error' => $error
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+//            $token = $request->getAttribute('authorization');
+//            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(self::$wrong_token_message, json_decode((string) $response->getBody())->custom_message);
@@ -403,7 +478,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertRegExp('/Required HTTPS/', json_decode((string) $response->getBody())->message);
@@ -420,7 +499,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -437,7 +520,11 @@ class TokenAuthenticationTest extends TestCase
             'relaxed' => ['example.com']
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -454,7 +541,11 @@ class TokenAuthenticationTest extends TestCase
             'secure' => false
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -469,7 +560,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => ['/app', '/api', '/home']
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -484,7 +579,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -499,7 +598,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => ''
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -515,7 +618,11 @@ class TokenAuthenticationTest extends TestCase
             'except' => ['/api/tasks', '/api/users/']
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -530,7 +637,11 @@ class TokenAuthenticationTest extends TestCase
             'path' => '/api'
         ]);
 
-        $response = $auth($request, new Response(), $this->next());
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $response = $auth($request, new Response(), $next);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
