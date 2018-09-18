@@ -442,6 +442,23 @@ class TokenAuthenticationTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function test_should_return_200_with_secure_disabled()
+    {
+        $request = Request::createFromEnvironment(Environment::mock())
+            ->withUri(Uri::createFromString('http://example.com/api'))
+            ->withHeader('Authorization', 'Bearer ' . self::$token);
+
+        $auth = new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+            'path' => '/api',
+            'secure' => false
+        ]);
+
+        $response = $auth($request, new Response(), $this->next());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function test_should_return_401_when_match_path()
     {
         $request = Request::createFromEnvironment(Environment::mock())
