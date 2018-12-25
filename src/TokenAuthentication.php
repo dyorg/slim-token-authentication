@@ -19,6 +19,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use Slim\Route;
 
 class TokenAuthentication
 {
@@ -94,6 +95,11 @@ class TokenAuthentication
     {
         $uri = $request->getUri()->getPath();
         $uri = '/' . trim($uri, '/');
+
+        /** If middleware applied directly to route or to group of routes we should authenticate */
+        if ($request->getAttribute('route') instanceof Route && $this->options["except"] === null && $this->options["path"] === null) {
+            return true;
+        }
 
         /** If request path is matches except should not authenticate. */
         foreach ((array) $this->options['except'] as $except) {

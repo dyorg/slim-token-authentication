@@ -19,6 +19,8 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
+use Slim\Route;
+use Slim\RouteGroup;
 
 class TokenAuthenticationTest extends TestCase
 {
@@ -134,6 +136,31 @@ class TokenAuthenticationTest extends TestCase
         $this->assertEquals(self::$token, $response->getBody());
     }
 
+    public function test_should_authenticate_when_middleware_applied_to_route_without_path_option()
+    {
+        $request = Request::createFromEnvironment(Environment::mock())
+            ->withUri(Uri::createFromString('https://example.com/api'))
+            ->withHeader('Authorization', 'Bearer ' . self::$token);
+
+        $auth = new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $token = $request->getAttribute('authorization');
+            $response->getBody()->write($token);
+            return $response;
+        };
+
+        $route = new Route('GET', '/api', $next);
+        $request = $request->withAttribute('route', $route);
+
+        $response = $auth($request, new Response(), $next);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(self::$token, $response->getBody());
+    }
+
     public function test_should_found_token_from_default_header()
     {
         $request = Request::createFromEnvironment(Environment::mock())
@@ -171,6 +198,29 @@ class TokenAuthenticationTest extends TestCase
         $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             return $response;
         };
+
+        $response = $auth($request, new Response(), $next);
+
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(self::$token_invalid, json_decode((string) $response->getBody())->token);
+    }
+
+    public function test_should_return_401_and_found_token_when_applied_to_route_without_path_option()
+    {
+        $request = Request::createFromEnvironment(Environment::mock())
+            ->withUri(Uri::createFromString('https://example.com/api'))
+            ->withHeader('Authorization', 'Bearer ' . self::$token_invalid);
+
+        $auth = new TokenAuthentication([
+            'authenticator' => [$this, 'validAuthenticator'],
+        ]);
+
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $route = new Route('GET', '/api', $next);
+        $request = $request->withAttribute('route', $route);
 
         $response = $auth($request, new Response(), $next);
 
