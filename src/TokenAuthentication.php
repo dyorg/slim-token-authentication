@@ -13,8 +13,10 @@ namespace Slim\Middleware;
 
 use Slim\Middleware\TokenAuthentication\TokenSearch;
 use Slim\Middleware\TokenAuthentication\UnauthorizedExceptionInterface;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Psr7\Response;
 
 class TokenAuthentication
 {
@@ -40,20 +42,21 @@ class TokenAuthentication
         $this->fill($options);
     }
 
-    public function __invoke(Request $request, Response $response, $next)
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
     {
         $scheme = $request->getUri()->getScheme();
         $host = $request->getUri()->getHost();
 
         /** If rules say we should not authenticate call next and return. */
         if (false === $this->shouldAuthenticate($request)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         /** HTTP allowed only if secure is false or server is in relaxed array. */
         if ("https" !== $scheme && true === $this->options["secure"]) {
             if (!in_array($host, $this->options["relaxed"])) {
-                return $response->withJson(['message' => 'Required HTTPS for token authentication.'], 401);
+
+                return $this->getErrorResponse('Required HTTPS for token authentication.');
             }
         }
 
@@ -64,15 +67,31 @@ class TokenAuthentication
         try {
 
             if ($this->options['authenticator']($request, $this) === false) {
-                return $this->error($request, $response);
+                return $this->error($request);
             }
 
-            return $next($request, $response);
+            return $handler->handle($request);
 
         } catch (UnauthorizedExceptionInterface $e) {
             $this->setResponseMessage($e->getMessage());
-            return $this->error($request, $response);
+            return $this->error($request);
         }
+    }
+
+    private function getErrorResponse(string $message, string $token = null): ResponseInterface
+    {
+        $data = ['message' => $message];
+
+        if (!is_null($token)) {
+            $data['token'] = $token;
+        }
+
+        $response = new Response();
+        $response->withHeader('Content-Type', 'application/json');
+        $response->withStatus(401);
+        $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+
+        return $response;
     }
 
     private function fill($options = array())
@@ -109,30 +128,21 @@ class TokenAuthentication
         return false;
     }
 
-    public function error(Request $request, Response $response)
+    public function error(Request $request): ResponseInterface
     {
         /** If exists a custom error function callable, ignore remaining code */
         if (!empty($this->options['error'])) {
             
-            $custom_error_response = $this->options['error']($request, $response, $this);
+            $custom_error_response = $this->options['error']($request, $this);
 
-            if ($custom_error_response instanceof Response) {
+            if ($custom_error_response instanceof ResponseInterface) {
                return $custom_error_response;
             } else {
-                throw new \Exception("The error function must return an object of class Response.");
+                throw new \Exception(sprintf('The error function must return an object of %s.', ResponseInterface::class));
             }
         }
 
-        if ($this->getResponseMessage())
-            $res['message'] = $this->getResponseMessage();
-        else
-            $res['message'] = 'Invalid authentication token';
-
-        if ($this->getResponseToken()) {
-            $res['token'] = $this->getResponseToken();
-        }
-
-        return $response->withJson($res, 401, JSON_PRETTY_PRINT);
+        return $this->getErrorResponse($this->getResponseMessage(), $this->getResponseToken());
     }
 
     public function findToken(Request $request)
@@ -160,7 +170,7 @@ class TokenAuthentication
 
     public function getResponseMessage()
     {
-        return isset($this->response['message']) ? $this->response['message'] : null;
+        return $this->response['message'] ?? 'Invalid authentication token';
     }
 
     public function setResponseToken($token)
@@ -171,7 +181,7 @@ class TokenAuthentication
 
     public function getResponseToken()
     {
-        return isset($this->response['token']) ? $this->response['token'] : null;
+        return $this->response['token'] ?? null;
     }
 
     /** Use to set multiples messages and after get on custom error function */

@@ -1,14 +1,28 @@
 # Slim Token Authentication
 
-This is a Token Authentication Middleware for Slim 3.0+. 
+This is a Token Authentication Middleware for Slim 4.0+. 
 This middleware was designed to maintain easy to implement token authentication with custom authenticator.  
 
 ## Installing
 
 Get the latest version with [Composer](http://getcomposer.org "Composer").
 
+Modify composer.json adding the Github repository
+
+```json
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "url": "https://github.com/sgoranov/slim-token-authentication.git",
+            "type": "git"
+        }
+    ]
+```
+
+Install via composer
+
 ```bash
-composer require dyorg/slim-token-authentication
+composer require "sgoranov/slim-token-authentication":"dev-master"
 ```
 
 ## Getting authentication
@@ -18,18 +32,18 @@ When you create a new instance of `TokenAuthentication` you must pass an array w
 You need setting authenticator and path options for authentication to start working.
 
 ```php
-$authenticator = function($request, TokenAuthentication $tokenAuth){
+$authenticator = function(Psr\Http\Message\ServerRequestInterface $request, TokenAuthentication $tokenAuth): bool {
 
-    # Search for token on header, parameter, cookie or attribute
     $token = $tokenAuth->findToken($request);
     
-    # Your method to make token validation
-    $user = User::auth_token($token);
+    // validate the token using an external service
+    if (TokenValidator::isValid($token)) {
+        return true;
+    }
     
-    # If occured ok authentication continue to route
-    # before end you can storage the user informations or whatever
-    ...
+    $tokenAuth->setResponseMessage('Token is not valid');
     
+    return false;
 };
 
 $app = new App();
@@ -155,15 +169,18 @@ You can customize it by setting a callable function on `error` option.
 ```php
 ...
 
-$error = function($request, $response, TokenAuthentication $tokenAuth) {
-    $output = [];
-    $output['error'] = [
-        'msg' => $tokenAuth->getResponseMessage(),
-        'token' => $tokenAuth->getResponseToken(),
-        'status' => 401,
-        'error' => true
+$error = function($request, TokenAuthentication $tokenAuth): Psr\Http\Message\ResponseInterface {
+
+    $data = [
+        'msg' => 'Custom error message'
     ];
-    return $response->withJson($output, 401);
+
+    $response = new Response();
+    $response->withHeader('Content-Type', 'application/json');
+    $response->withStatus(401);
+    $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+
+    return $response;
 }
 
 $app = new App();
