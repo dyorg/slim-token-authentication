@@ -1,6 +1,6 @@
 {
-  "name": "dyorg/slim-token-authentication",
-  "description": "Slim 3.0+ Token Authentication Middleware",
+  "name": "sgoranov/slim-token-authentication",
+  "description": "Slim 4.0 Token Authentication Middleware",
   "keywords": [
     "slim",
     "middleware",
@@ -9,7 +9,7 @@
     "authentication",
     "authorization"
   ],
-  "homepage": "https://github.com/dyorg/slim-token-authentication",
+  "homepage": "https://github.com/sgoranov/slim-token-authentication",
   "license": "MIT",
   "authors": [
     {
@@ -17,6 +17,9 @@
       "email": "dyorg@rabbiit.com",
       "homepage": "https://rabbiit.com/",
       "role": "Developer"
+    },
+    {
+      "email": "sgoranov@gmail.com",
     }
   ],
   "require": {
